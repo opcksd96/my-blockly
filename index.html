@@ -3,23 +3,56 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Blockly Demo: Fixed Blockly</title>
+    <title>私のビジュアルプログラミング</title>
     <script src="blockly_compressed.js"></script>
     <script src="blocks_compressed.js"></script>
     <script src="ja.js"></script>
+    <script src="dart_compressed.js"></script>
+    <script src="javascript_compressed.js"></script>
+    <script src="lua_compressed.js"></script>
+    <script src="php_compressed.js"></script>
+    <script src="python_compressed.js"></script>
     <style type="text/css">
         #blocklyDiv {
             position: fixed;
+            width: 50%;
             left: 0;
-            right: 0;
             top: 0;
             bottom: 0;
+        }
+
+        #preview {
+            position: fixed;
+            width: 50%;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            overflow: auto;
+        }
+        #preview>div {
+            margin: 1em;
+        }
+        #source {
+            width: 100%;
         }
     </style>
 </head>
 
 <body>
     <div id="blocklyDiv"></div>
+
+    <form id="preview">
+        <div>
+            <select id="language">
+                <option>JavaScript</option>
+                <option>Python</option>
+                <option>PHP</option>
+                <option>Lua</option>
+                <option>Dart</option>
+            </select>
+            <pre id="source"></pre>
+        </div>
+    </form>
 
     <xml xmlns="https://developers.google.com/blockly/xml" id="toolbox" style="display: none">
         <block type="controls_if"></block>
@@ -34,11 +67,22 @@
     </xml>
 
     <script>
-        var demoWorkspace = Blockly.inject('blocklyDiv',
+        var workspace = Blockly.inject('blocklyDiv',
             {
                 media: 'media/',
                 toolbox: document.getElementById('toolbox')
             });
+        var source = document.getElementById('source'); //ソース表示先
+        var language = document.getElementById('language'); //言語選択のselectタグ
+        var task = null; //１秒以内の連続実行を抑制
+        var updatePreview = function () { //ソースコード更新
+            if (task != null) clearTimeout(task);
+            task = setTimeout(function () {
+                source.textContent = Blockly[language.value].workspaceToCode(workspace);
+            }, 1000);
+        };
+        workspace.addChangeListener(updatePreview); //ブロックが変更された時ソースコード更新
+        language.addEventListener('change', updatePreview, false); //言語を切り替えた時ソースコード更新
     </script>
 </body>
 
