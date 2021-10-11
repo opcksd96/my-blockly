@@ -29,9 +29,11 @@
             bottom: 0;
             overflow: auto;
         }
+
         #preview>div {
             margin: 1em;
         }
+
         #source {
             width: 100%;
         }
@@ -85,7 +87,28 @@
         var workspace = Blockly.inject('blocklyDiv',
             {
                 media: 'media/',
-                toolbox: document.getElementById('toolbox')
+                toolbox: document.getElementById('toolbox'),
+                collapse: false,
+                trashcan: false,
+                grid:
+                {
+                    spacing: 12, //間隔
+                    length: 12, //線の長さ
+                    colour: '#eee', //線の色
+                    snap: true //ブロックをそろえる
+                },
+                zoom:
+                {
+                    controls: true, //拡大、縮小、元のサイズボタンを表示
+                    wheel: false, // マウスホイールでの拡大縮小有効
+                    startScale: 2, //初期倍率
+                    maxScale: 3, //最大倍率
+                    minScale: 0.5, //最小倍率
+                    scaleSpeed: 1.2 //ズームするスピード
+                },
+                horizontalLayout: true,
+                toolboxPosition: 'end',
+                scrollbars: false
             });
         var source = document.getElementById('source'); //ソース表示先
         var language = document.getElementById('language'); //言語選択のselectタグ
